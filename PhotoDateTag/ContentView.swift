@@ -295,7 +295,7 @@ struct ContentView: View {
             
             return (date, location)
         } else if ["mov", "mp4", "avi", "m4v"].contains(ext) {
-            let asset = AVAsset(url: url)
+            let asset = AVURLAsset(url: url)
             
             var date: Date?
             if let creationDate = asset.creationDate?.dateValue {
