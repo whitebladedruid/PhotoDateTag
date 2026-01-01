@@ -113,15 +113,15 @@ struct ContentView: View {
                         }
                     }
                 }
-                .onChange(of: selectedFolder) { _ in
+                .onChange(of: selectedFolder) { 
                     scanFolder()
                 }
-                .onChange(of: isRecursive) { _ in
+                .onChange(of: isRecursive) { 
                     if selectedFolder != nil {
                         scanFolder()
                     }
                 }
-                .onChange(of: selectedFiles) { _ in
+                .onChange(of: selectedFiles) { 
                     updateMapRegion()
                 }
 
