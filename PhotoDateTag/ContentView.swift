@@ -151,7 +151,7 @@ struct ContentView: View {
                     // Image/Video preview
                     if supportedExtensions.contains(currentFile.url.pathExtension.lowercased()) {
                         if ["mov", "mp4", "avi", "m4v"].contains(currentFile.url.pathExtension.lowercased()) {
-                            VideoPlayer(player: AVPlayer(url: currentFile.url))
+                            VideoPlayer(player: AVPlayer(playerItem: AVPlayerItem(asset: AVURLAsset(url: currentFile.url))))
                                 .frame(minHeight: 200, maxHeight: .infinity)
                         } else {
                             if let image = NSImage(contentsOf: currentFile.url) {
