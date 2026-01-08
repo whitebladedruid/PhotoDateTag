@@ -52,6 +52,13 @@ struct ContentView: View {
         return f
     }()
 
+    private var mapRegionBinding: Binding<MKCoordinateRegion> {
+        Binding(
+            get: { mapRegion ?? MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)) },
+            set: { newRegion in DispatchQueue.main.async { mapRegion = newRegion } }
+        )
+    }
+
     var body: some View {
         HStack {
             // Left side: File list
@@ -175,10 +182,7 @@ struct ContentView: View {
                 // Map preview
                 let locations = selectedItems.compactMap { $0.location }
                 if mapRegion != nil {
-                    Map(coordinateRegion: Binding(
-                        get: { mapRegion! },
-                        set: { mapRegion = $0 }
-                    ), annotationItems: locations.map { IdentifiableCoordinate(coordinate: $0) }) { item in
+                    Map(coordinateRegion: mapRegionBinding, annotationItems: locations.map { IdentifiableCoordinate(coordinate: $0) }) { item in
                         MapPin(coordinate: item.coordinate)
                     }
                     .frame(minHeight: 200, maxHeight: .infinity)
@@ -191,12 +195,14 @@ struct ContentView: View {
         .sheet(isPresented: $showMapPopover) {
             if let file = editingLocationFor {
                 LocationEditorView(file: file, onSave: { newLocation in
-                    // Update location
-                    if let index = files.firstIndex(where: { $0.id == file.id }) {
-                        files[index].location = newLocation
+                    Task {
+                        // Update location
+                        if let index = files.firstIndex(where: { $0.id == file.id }) {
+                            files[index].location = newLocation
+                        }
+                        updateMapRegion()
+                        showMapPopover = false
                     }
-                    updateMapRegion()
-                    showMapPopover = false
                 })
             }
         }
