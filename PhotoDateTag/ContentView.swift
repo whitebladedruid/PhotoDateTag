@@ -54,7 +54,12 @@ struct ContentView: View {
 
     private var mapRegionBinding: Binding<MKCoordinateRegion> {
         Binding(
-            get: { mapRegion ?? MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)) },
+            get: {
+                mapRegion ?? MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                    span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
+                )
+            },
             set: { newRegion in DispatchQueue.main.async { mapRegion = newRegion } }
         )
     }
