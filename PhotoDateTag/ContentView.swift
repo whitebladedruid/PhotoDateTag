@@ -197,17 +197,17 @@ struct ContentView: View {
                 }
             }
         }
-        .sheet(isPresented: $showMapPopover) {
+        .sheet(isPresented: $showMapPopover, onDismiss: {
+            editingLocationFor = nil
+        }) {
             if let file = editingLocationFor {
                 LocationEditorView(file: file, onSave: { newLocation in
-                    Task {
-                        // Update location
-                        if let index = files.firstIndex(where: { $0.id == file.id }) {
-                            files[index].location = newLocation
-                        }
-                        updateMapRegion()
-                        showMapPopover = false
+                    // Update location
+                    if let index = files.firstIndex(where: { $0.id == file.id }) {
+                        files[index].location = newLocation
                     }
+                    updateMapRegion()
+                    showMapPopover = false
                 })
             }
         }
